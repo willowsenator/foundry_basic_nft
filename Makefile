@@ -27,7 +27,7 @@ test:
 NETWORK_ARGS := --rpc-url http://127.0.0.1:8545 --account ANVIL_DEFAULT --broadcast
 
 ifeq ($(findstring sepolia,$(ARGS)),sepolia)
-    NETWORK_ARGS := --rpc-url $(SEPOLIA_RPC_URL) --account SEPOLIA_ACCOUNT --verify --etherscan-api-key $(ETHERSCAN_API_KEY) --broadcast -vvvv
+    NETWORK_ARGS := --rpc-url $(SEPOLIA_RPC_URL) --account SEPOLIA_ACCOUNT --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
 endif
 
 deploy: 
