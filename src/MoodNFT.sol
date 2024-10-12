@@ -10,6 +10,16 @@ contract MoodNFT is ERC721 {
     string private s_sadSvgImageUri;
     enum Mood {HAPPY, SAD}
     mapping (uint256 => Mood) private s_tokenIdToMood;
+
+    // error
+    error MoodNFT__CannotFlipIfNotOwner();
+
+    modifier isApprovedOrOwner(address spender, uint256 tokenId) {
+        address owner = _ownerOf(tokenId);
+        require(spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender), MoodNFT__CannotFlipIfNotOwner());   
+        _;
+    }
+
     constructor(string memory happySvgImageUri, string memory sadSvgImageUri) ERC721("Mood NFT", "MNFT") {
         s_tokenCounter = 0; 
         s_happySvgImageUri = happySvgImageUri;
@@ -26,6 +36,10 @@ contract MoodNFT is ERC721 {
         return "data:application/json;base64,";
     }
 
+    function flipMood(uint256 tokenId) public isApprovedOrOwner(msg.sender, tokenId) {
+        s_tokenIdToMood[tokenId] = s_tokenIdToMood[tokenId] == Mood.HAPPY ? Mood.SAD : Mood.HAPPY;
+    }
+
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
        return string(abi.encodePacked(_baseURI(), Base64.encode(generateTokenMetadata(tokenId))));
@@ -38,6 +52,8 @@ contract MoodNFT is ERC721 {
             return s_sadSvgImageUri;
         }
     }
+
+    
 
     function generateTokenMetadata(uint256 tokenId) private view returns (bytes memory) {
         return abi.encodePacked('{"name": "', name(), '", "description": "An NFT that represents the mood of the owner",'
