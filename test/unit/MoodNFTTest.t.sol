@@ -2,7 +2,7 @@
 pragma solidity 0.8.28;
 
 import {Test, console} from "forge-std/Test.sol";
-import {MoodNFT} from "../src/MoodNFT.sol";
+import {MoodNFT} from "../../src/MoodNFT.sol";
 
 contract MoodNFTTest is Test {
     MoodNFT public moodNFT;
@@ -17,6 +17,15 @@ contract MoodNFTTest is Test {
     function testViewTokenURI() public {
         vm.prank(USER);
         moodNFT.mintNFT();
-        console.log(moodNFT.tokenURI(0));
+        assert(keccak256(abi.encodePacked(moodNFT.getImageUriByMood(moodNFT.getMoodEnum(0)))) == keccak256(abi.encodePacked(HAPPY_SVG_URI)));
+    }
+
+    function testFlipMood() public {
+        vm.startPrank(USER);
+        moodNFT.mintNFT();
+        moodNFT.flipMood(0);
+        vm.stopPrank();
+
+       assert(keccak256(abi.encodePacked(moodNFT.getImageUriByMood(moodNFT.getMoodEnum(1)))) == keccak256(abi.encodePacked(SAD_SVG_URI)));
     }
 }

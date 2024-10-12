@@ -4,10 +4,11 @@ out = "out"
 libs = ["lib"]
 fs_permissions = [
     { path = "./broadcast/", access = "read" },
+    { path = "./img/", access = "read" },
 ]
 
 ffi = true
 
-remappings=['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
+remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
